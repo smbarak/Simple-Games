@@ -1,0 +1,392 @@
+/*
+ * Creator: Saad Mobarak
+ * 14-FEB-21
+ */
+#include <iostream>
+#include <cstdlib>
+#include <ctime>
+
+// included for sleep() ... pauses a little to optimize gameplay
+#include <Windows.h>
+
+// Boxing match vs Floyd Mayweather
+
+using namespace std;
+
+// Your health, opponents health and stamina
+// body shot, block, clinch / "hug", punch to face
+
+// face punches decrease stamina by 20
+void face(int& player_health, int& opponent_health, int& stamina, int& stamina2);
+// body punches decrease stamina by 10
+void body(int& player_health, int& opponent_health, int& stamina, int& stamina2);
+// no stamina loss or gain for block
+void block(int& player_health, int& opponent_health, int& stamina, int& stamina2);
+// 15 stamina gain for clinch
+void clinch(int& player_health, int& opponent_health, int& stamina, int& stamina2);
+void attack(int& player_health, int& opponent_health, int& stamina, int& stamina2, string name);
+
+int main()
+{
+    srand(time(0));
+
+    // Get name of user
+    string name;
+    cout << "What is your name?\n";
+    getline(cin, name);
+    // variable for sleep()
+    int pause = 2100;
+
+    // Introduction:
+    cout << name << ", this is the moment you've been waiting for your entire life. This is your childhood dream.";
+    Sleep(pause);
+    cout << "\nYou reached the final of the World Boxing Championship!!!\n";
+    Sleep(pause);
+    cout << "This is a HUGE moment...\n";
+    Sleep(pause);
+    cout << "As the 19 year-old underdog, you have monumental fan support. The people love you " << name <<",";
+    cout << " they really do...\n";
+    Sleep(pause);
+    cout << "You're fighting the one and only FLoyd Mayweather...\n\n";
+    Sleep(pause);
+    cout << "You're in the ring and you have four options:\n";
+
+    // variables to decide winner
+    int player_health = 100, opponent_health = 100, stamina = 100, stamina2 = 100;
+
+    while(player_health > 0 && opponent_health > 0)
+    {
+
+        // asks player what action to perform
+        int choice;
+        cout << "1. Face punch\n2. Body punch\n3. Block\n4. Clinch (or \"hug\")\n";
+        cout << "What's the move?\n";
+
+        cin >> choice;
+
+        // prevents player from attacking if they have no stamina
+        if(choice == 1 && stamina < 20)
+        {
+            cout << "Not enough stamina... Try again:\n";
+            cout << "1. Face punch\n2. Body punch\n3. Block\n4. Clinch (or \"hug\")\n";
+            cin >> choice;
+        }
+
+            // prevents player from the weaker attack if they have no stamina
+        else if((choice == 1 or choice == 2) and stamina < 10)
+        {
+            cout << "Not enough stamina... Try again:\n";
+            cout << "1. Face punch\n2. Body punch\n3. Block\n4. Clinch (or \"hug\")\n";
+            cin >> choice;
+        }
+
+        // punch face
+        if (choice == 1)
+        {
+            face(player_health, opponent_health, stamina, stamina2);
+        }
+
+            // body punch
+        else if (choice == 2)
+        {
+            body(player_health, opponent_health, stamina, stamina2);
+        }
+
+            // block
+        else if (choice == 3)
+        {
+            block(player_health, opponent_health, stamina, stamina2);
+        }
+
+            // clinch
+        else
+        {
+            clinch(player_health, opponent_health, stamina, stamina2);
+        }
+        attack(player_health, opponent_health, stamina, stamina2, name);
+
+        // print health and stamina
+        cout << "\n----------------------------------\nYour health: " << player_health << "\nYour stamina: " << stamina;
+        cout << "\nOpponent's Health: " << opponent_health << "\nOpponent's Stamina: " << stamina2 << endl;
+        cout <<"\n----------------------------------\n\n";
+        Sleep(pause);
+
+
+
+    }
+    // player lost
+    if(player_health == 0)
+    {
+        cout << "You lost ... Tough luck.\n";
+    }
+        // player won
+    else
+    {
+        cout << "YOU WON THE CHAMPIONSHIP!!!\n";
+
+    }
+
+    return 0;
+}
+
+
+void face(int& player_health, int& opponent_health, int& stamina, int& stamina2)
+{
+    // Randomizes whether the player hits successfully and randomizes the magnitude of punch
+    int pause = 1700;
+    cout << "You throw a punch to his face\n";
+    Sleep(pause);
+    int chance = rand() % 3 + 1;
+    int health_lost = (rand() % 3 + 1) * 10;
+
+    // 1 in a 3 chance the player gets whooped
+    if(chance == 1)
+    {
+        cout << "You're too slow chief... This is Mayweather we're talking about here...\n";
+        Sleep(pause);
+        cout << "He sees your punch coming from a mile away.\n";
+        Sleep(pause);
+        cout << "He dodges your pathetic attempt and destroys your nose with a straight jab...\n";
+        Sleep(pause);
+        cout << "You lose " << health_lost << " health.\n";
+        player_health -= health_lost;
+        stamina -= 20;
+        stamina2 -= 10;
+    }
+
+        // 1 in a 3 chance player hits mayweather
+    else if(chance == 2)
+    {
+        cout << "What a clean, smooth punch. Nice job champ!\n";
+        opponent_health -= health_lost;
+        stamina -= 20;
+    }
+
+        // 1 in a 3 chance opponent dodges the punch
+    else
+    {
+        cout << "Mayweather dodges your punch\n";
+        stamina -= 20;
+    }
+
+    // sets player health to 0 if it becomes negative
+    if(player_health < 0)
+    {
+        player_health = 0;
+    }
+    Sleep(pause);
+
+}
+
+void body(int& player_health, int& opponent_health, int& stamina, int& stamina2)
+{
+    // same idea as face punch but player is more likely to deal damage
+    int pause = 1700;
+    cout << "You go for a body punch\n";
+    int chance = rand() % 4 + 1;
+    int health_lost = (rand() % 2 + 1) * 5;
+    Sleep(pause);
+
+    if(chance == 1)
+    {
+        cout << "You punch his elbow. You lost 5 health...\n";
+        player_health -= 5;
+    }
+    else
+    {
+        cout << "Good job. Mayweather loses " << health_lost << " health.\n";
+        opponent_health -= health_lost;
+
+    }
+    stamina -= 10;
+    if(player_health < 0)
+    {
+        player_health = 0;
+    }
+
+    Sleep(pause);
+}
+
+void block(int& player_health, int& opponent_health, int& stamina, int& stamina2)
+{
+    // does not lose stamina and just stays idle. 17% chance player will get whooped
+    int pause = 1700;
+    cout << "You decide to hunch over and take cover\n";
+    int chance = rand() % 6 + 1;
+    int health_lost = (rand() % 5 + 2) * 5;
+    Sleep(pause);
+    if(chance == 1)
+    {
+        cout << "Mayweather squeezes a punch in between your fists and BAM! ...\n";
+        Sleep(pause);
+        cout << "You lost " << health_lost << " health\n";
+        player_health -= health_lost;
+        stamina2 -= 10;
+    }
+    else
+    {
+        cout << "Good call ... The destruction of your face is delayed...\n";
+    }
+    if(player_health < 0)
+    {
+        player_health = 0;
+    }
+    if(stamina2 < 0)
+    {
+        stamina2 = 0;
+    }
+    Sleep(pause);
+}
+
+void clinch(int& player_health, int& opponent_health, int& stamina, int& stamina2)
+{
+    // risks for increase stamina .. 1 in a 6 chance player gets smashed
+    int pause = 1700;
+    cout << "You go for a clinch.\n";
+    int chance = rand() % 6 + 1;
+    int health_lost = (rand() % 9 + 6) * 5;
+    Sleep(pause);
+
+    if(chance == 1)
+    {
+        cout << "Mayweather does not let you get close enough for a clinch.\n";
+        Sleep(pause);
+        cout << "He shatters your jaw with an uppercut!!! You lost " << health_lost << "health.\n";
+        player_health -= health_lost;
+        stamina2 -= 10;
+    }
+    else
+    {
+        cout << "Your stamina increases by 15. Mayweather's stamina increases by 10.\n";
+        stamina += 15;
+        stamina2 += 10;
+    }
+    if(player_health < 0)
+    {
+        player_health = 0;
+    }
+    if(stamina > 100)
+    {
+        stamina = 100;
+    }
+
+    if(stamina2 <  0)
+    {
+        stamina2 = 0;
+    }
+    Sleep(pause);
+}
+
+void attack(int&player_health, int& opponent_health, int& stamina, int& stamina2, string name)
+{
+    // will always deal damage to player
+    int pause = 1700;
+    int chance = rand() % 4 + 1;
+    int health_lost = (rand() % 4 + 2) * 5;
+
+    // Prevents opponent from attacking if they do not have enough stamina
+    while(stamina2 < 10 && chance == 1)
+    {
+        int chance = rand() % 4 + 1;
+    }
+
+    if(chance == 1)
+    {
+        int minichance = rand() % 2 + 1;
+        if(minichance == 1)
+        {
+            cout << "\nOh Lord have mercy. Floyd unleashes his chain attack.\n";
+            Sleep(pause);
+            cout << "Jab. Cross. Jab. Hook. Side Step. Jab.\n";
+            Sleep(pause);
+            cout << "You lost " << health_lost << " health...\n";
+            player_health -= health_lost;
+            stamina2 -= 15;
+        }
+        else
+        {
+            cout << "\nMayweather doesn't play no games. He goes straight to the liver.\n";
+            Sleep(pause);
+            cout << "You lose both stamina and health.\n";
+            stamina -= 10;
+            player_health -= health_lost;
+            stamina2 -= 10;
+        }
+    }
+
+    else if(chance == 2)
+    {
+        cout << "Mayweather taunts you to hype the crowd up!!\n";
+        int minichance = rand() % 3 + 1;
+        // 1 in 3 chance you go after him
+        if(minichance == 1)
+        {
+            cout << "You dont let him taunt you like that!!!\n";
+            Sleep(pause);
+            cout << "You smash his face with a flying punch! " << name << ", YOU'RE A LEGEND";
+            opponent_health -= 20;
+            stamina -= 5;
+        }
+        else
+        {
+            cout << "You get your stamina back up and so does he\n";
+            Sleep(pause);
+            cout << "However, you look like a clown now :(\n";
+            stamina += 5;
+            stamina2 += 5;
+        }
+
+    }
+
+    // 1 in 3 chance that when floyd goes for a clinch you smash his face
+    else if (chance == 3)
+    {
+        int minichance = rand() % 3 + 1;
+        if(minichance == 1)
+        {
+            cout << "\nMayweather goes for a clinch.\n";
+            Sleep(pause);
+            cout << "You dont let him get close to you!!!\nBRAVO!!!!";
+            Sleep(pause);
+            cout << "You give him a clean uppercut on the jaw! LET'S GOOOOO!";
+            opponent_health -= 30;
+            stamina -= 5;
+
+        }
+        cout << "\nMayweather goes for a clinch...\n";
+        Sleep(pause);
+        cout << "You both gain stamina.\n";
+        stamina += 10;
+        stamina2 += 10;
+
+    }
+
+    else
+    {
+        cout << "\nMayweather sits back...\n";
+        Sleep(pause);
+        cout << "You gain 10 stamina...\n";
+        stamina += 10;
+        stamina2 += 5;
+    }
+
+    // prevents from having negatvie health or > 100 stamina
+
+    if(player_health < 0)
+    {
+        player_health = 0;
+    }
+    if(stamina < 0)
+    {
+        stamina = 0;
+    }
+    if(stamina2 < 0)
+    {
+        stamina2 = 0;
+    }
+    if(stamina2 > 100)
+    {
+        stamina2 = 100;
+    }
+    Sleep(pause);
+}
