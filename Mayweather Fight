@@ -1,7 +1,12 @@
 /*
  * Creator: Saad Mobarak
  * 14-FEB-21
+ * 
+ * This program simulates a very basic fame where the user fights in the world boxing championship final.
+ * The player can choose from multiple attack/defend options. The opponnet randomly chooses how to respond.
  */
+ 
+ 
 #include <iostream>
 #include <cstdlib>
 #include <ctime>
